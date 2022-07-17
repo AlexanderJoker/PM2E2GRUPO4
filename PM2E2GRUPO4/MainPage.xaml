@@ -2,23 +2,39 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="PM2E2GRUPO4.MainPage">
-
+ <ScrollView>
     <StackLayout>
-        <Frame BackgroundColor="#2196F3" Padding="24" CornerRadius="0">
-            <Label Text="Welcome to Xamarin.Forms!" HorizontalTextAlignment="Center" TextColor="White" FontSize="36"/>
-        </Frame>
-        <Label Text="Start developing now" FontSize="Title" Padding="30,10,30,10"/>
-        <Label Text="Make changes to your XAML file and save to see your UI update in the running app with XAML Hot Reload. Give it a try!" FontSize="16" Padding="30,0,30,0"/>
-        <Label FontSize="16" Padding="30,24,30,0">
-            <Label.FormattedText>
-                <FormattedString>
-                    <FormattedString.Spans>
-                        <Span Text="Learn more at "/>
-                        <Span Text="https://aka.ms/xamarin-quickstart" FontAttributes="Bold"/>
-                    </FormattedString.Spans>
-                </FormattedString>
-            </Label.FormattedText>
-        </Label>
-    </StackLayout>
+      <Image Source="uth.png" HeightRequest="180" WidthRequest="100" />
+            <Label Text="EXAMEN PROGRAMACION MOVIL II" FontSize="20" HorizontalOptions="Center"  Margin="0, 0, 0, 15" />
 
+
+            <Image x:Name="UbiImagen" HeightRequest="300"  BackgroundColor="#FBEAC2"   Margin="35,0"/>
+
+            <Button x:Name="foto" Text="Tomar Fotografia" FontAttributes="Bold"  Margin="35,15,35,0" ImageSource="camara"
+                    BackgroundColor="#54CA3F" CornerRadius="10"  FontSize="15" TextColor="Black" Clicked="foto_Clicked"/>
+
+            <Entry  x:Name="longitud" Placeholder="Longitud Actual" Margin="40,10,40,10" IsEnabled="False" />
+
+            <Entry x:Name="latitud" Placeholder="Latitud Actual" Margin="40,0,40,10" IsEnabled="False" />
+
+            
+            <Entry x:Name="descripcion"  Placeholder="Descripcion de Ubicacion" Margin="40,0" />
+
+
+            <Button x:Name="audio" Text="Grabar/Detener Audio" BackgroundColor="#54CA3F" CornerRadius="10" FontSize="15"  TextColor="Black" 
+                    FontAttributes="Bold"  Margin="55,0" Clicked="audio_Clicked" ImageSource="microfono" />
+            
+            <StackLayout Margin="0,10,0,0" Orientation="Horizontal" HorizontalOptions="CenterAndExpand" >
+                <Button x:Name="btnguardar" Text="Guardar" HeightRequest="50" WidthRequest="158"  BackgroundColor="#2196f3"  CornerRadius="10" FontSize="15"
+                        TextColor="Black" FontAttributes="Bold"  Clicked="btnguardar_Clicked"  ImageSource="guardarr" />
+                
+                <Button x:Name="btnlista" Text="Lista" HeightRequest="50"  BackgroundColor="#2196f3" FontSize="15"  CornerRadius="10"
+                        WidthRequest="150"  TextColor="black" FontAttributes="Bold" Clicked="btnlista_Clicked"  ImageSource="lista" />
+            </StackLayout>
+
+            <Button x:Name="btnsalir"
+                    Text="Salir"  BackgroundColor="#f44336"  CornerRadius="10" TextColor="black" FontSize="15" FontAttributes="Bold"
+                    Margin="60,10,60,25" Clicked="btnsalir_Clicked" />
+    </StackLayout>
+ </ScrollView>
 </ContentPage>

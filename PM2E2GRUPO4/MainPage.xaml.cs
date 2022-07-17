@@ -14,5 +14,40 @@ namespace PM2E2GRUPO4
         {
             InitializeComponent();
         }
+
+        private void btnfoto_Clicked(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btngrabar_Clicked(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnsalir_Clicked(object sender, EventArgs e)
+        {
+
+        }
+
+        private void foto_Clicked(object sender, EventArgs e)
+        {
+
+        }
+
+        private void audio_Clicked(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnguardar_Clicked(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnlista_Clicked(object sender, EventArgs e)
+        {
+
+        }
     }
 }
