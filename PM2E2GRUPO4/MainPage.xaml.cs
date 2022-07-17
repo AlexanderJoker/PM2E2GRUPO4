@@ -111,7 +111,7 @@ namespace PM2E2GRUPO4
         {
             if (String.IsNullOrEmpty(nombre))
             {
-                /////////// 
+                 
             }
             else
             {
@@ -168,18 +168,53 @@ namespace PM2E2GRUPO4
 
             private async void btnDetener_Clicked(object sender, EventArgs e)
         {
+            Grabar.IsEnabled = true;
+            btnDetener.IsEnabled = false;
 
+            Grabando = false;
+            lblmin.Text = "00";
+            lblseg.Text = "00";
+            lblstatus.Text = "Grabacion Terminada";
+
+            descripcion.IsEnabled = true;
+            btnguardar.IsEnabled = true;
+            btnlista.IsEnabled = true;
+            
+            await audioRecorderService.StopRecording();
+            var stream = audioRecorderService.GetAudioFileStream();            
+            bool NoExist = File.Exists(nombre);
+            if (!NoExist)
+            {
+                /////////Audio Existente por Defecto 
+            }
+
+            else
+            {
+                String[] FRecord = nombre.Split('/');
+                int tamfile = FRecord.Length;
+                String nombreA = FRecord[tamfile - 1];
+                String valorResultante = new String(nombreA.Where(Char.IsDigit).ToArray());
+
+                if (String.IsNullOrEmpty(valorResultante))
+                {
+                    /////// Usar el mismo archivo ////// 
+                }
+                else
+                {
+                    int num = Int32.Parse(valorResultante);
+                    
+                    nombre = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), DateTime.Now.ToString() + " " + "Audio_.mp3");
+                }
+            }
+
+            using (var audiofile = new FileStream(nombre, FileMode.Create, FileAccess.Write))
+            {
+                stream.CopyTo(audiofile);
+            }
+            await DisplayAlert("AVISO", "Audio Guardado", "Aceptar");
         }
 
-        private void btnlista_Clicked(object sender, EventArgs e)
-        {
-
-        }
-
-        private void btnguardar_Clicked(object sender, EventArgs e)
-        {
-
-        }
+      
 
         private async void btnlista_Clicked(object sender, EventArgs e)
         {
@@ -197,17 +232,11 @@ namespace PM2E2GRUPO4
                     await DisplayAlert("Alerta", "Hay Campos Vacios", "Ok");
                 }
                 else
-                {
-                    //convertir la imagen a base64
-                    string pathBase64Imagen = Convert.ToBase64String(ImagenSave);
-
-                    //extraer el path del audio
-                    string audio = AudioPath;
-                    //convertir a arreglo de bytes
-                    byte[] fileByte = System.IO.File.ReadAllBytes(audio);
-                    //convertir el audio a base64
+                {                    
+                    string pathBase64Imagen = Convert.ToBase64String(ImagenSave);   
+                    string audio = nombre;                    
+                    byte[] fileByte = System.IO.File.ReadAllBytes(audio);                    
                     string pathBase64Audio = Convert.ToBase64String(fileByte);
-
                     Sitios save = new Sitios
                     {
                         Id = int.Parse(""),
@@ -218,20 +247,16 @@ namespace PM2E2GRUPO4
                         Audio = pathBase64Audio,
                     };
 
-                    Uri RequestUri = new Uri("");
+                    Uri RequestUri = new Uri("https://activaciones3-02.000webhostapp.com/api/setLugar.php");
+                  
+                    var contenidoJson = new StringContent(JsonConvert.SerializeObject(save), Encoding.UTF8, "application/json");
+                    var respuestajson = await new HttpClient().PostAsync(RequestUri, contenidoJson);
 
-                    var client = new HttpClient();
-                    var json = JsonConvert.SerializeObject(save);
-                    var contentJson = new StringContent(json, Encoding.UTF8, "application/json");
-                    var response = await client.PostAsync(RequestUri, contentJson);
+                    if (respuestajson.StatusCode == HttpStatusCode.OK)
+                    {                   
+                        JObject respuestastoJson = JObject.Parse(respuestajson.Content.ReadAsStringAsync().Result);
 
-                    if (response.StatusCode == HttpStatusCode.OK)
-                    {
-                        String jsonx = response.Content.ReadAsStringAsync().Result;
-
-                        JObject jsons = JObject.Parse(jsonx);
-
-                        String Mensaje = jsons["msg"].ToString();
+                        String Mensaje = respuestastoJson["message_0x404"].ToString();
 
                         await DisplayAlert("Success", "Datos guardados correctamente", "Ok");
 
@@ -243,21 +268,14 @@ namespace PM2E2GRUPO4
                     }
                     else
                     {
-                        await DisplayAlert("Error", "Estamos en mantenimiento", "Ok");
+                        await DisplayAlert("Error", "No Hay acceso a la pagina Web", "Ok");
                     }
-
-                }
-
-            
-            
+                }            
         }
 
-    
-
-    private async void btnsalir_Clicked(object sender, EventArgs e)
+    private void btnsalir_Clicked(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.GetCurrentProcess().Kill();
+          System.Diagnostics.Process.GetCurrentProcess().Kill();
         }
-
     }
 }
