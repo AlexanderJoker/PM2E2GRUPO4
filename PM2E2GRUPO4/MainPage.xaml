@@ -7,10 +7,10 @@
       <Image Source="uth.png" HeightRequest="180" WidthRequest="100" />
             <Label Text="EXAMEN PROGRAMACION MOVIL II" FontSize="20" HorizontalOptions="Center"  Margin="0, 0, 0, 15" />
 
-
-            <Image x:Name="UbiImagen" HeightRequest="300"  BackgroundColor="#FBEAC2"   Margin="35,0"/>
-
-            <Button x:Name="foto" Text="Tomar Fotografia" FontAttributes="Bold"  Margin="35,15,35,0" ImageSource="camara"
+            <Frame CornerRadius= "40" BackgroundColor="#EBCD87" BorderColor="#54CA3F">
+                <Image x:Name="UbiImagen" HeightRequest="300"  WidthRequest="200" BackgroundColor="#FBEAC2" Aspect="AspectFit"  Margin="35,0"/>
+              </Frame>
+                    <Button x:Name="foto" Text="Tomar Fotografia" FontAttributes="Bold"  Margin="35,15,35,0" ImageSource="camara"
                     BackgroundColor="#54CA3F" CornerRadius="10"  FontSize="15" TextColor="Black" Clicked="foto_Clicked"/>
 
             <Entry  x:Name="longitud" Placeholder="Longitud Actual" Margin="40,10,40,10" IsEnabled="False" />
@@ -20,13 +20,20 @@
             
             <Entry x:Name="descripcion"  Placeholder="Descripcion de Ubicacion" Margin="40,0" />
 
+            <Label x:Name="lblstatus" Text="Sin Grabar" HorizontalOptions="Center" FontSize="15"/>
+            <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
+                <Image Source="klipartz" ></Image>
+                <Label x:Name="lblmin" Text="00" FontSize = "35"/>
+                <Label Text=":" FontSize = "35"/>
+                <Label x:Name="lblseg" Text="00" FontSize = "35"/>
+            </StackLayout>
 
-            <Button x:Name="audio" Text="Grabar/Detener Audio" BackgroundColor="#54CA3F" CornerRadius="10" FontSize="15"  TextColor="Black" 
+                <Button x:Name="audio" Text="Grabar/Detener Audio" BackgroundColor="#54CA3F" CornerRadius="10" FontSize="15"  TextColor="Black" 
                     FontAttributes="Bold"  Margin="55,0" Clicked="audio_Clicked" ImageSource="microfono" />
-            
+
             <StackLayout Margin="0,10,0,0" Orientation="Horizontal" HorizontalOptions="CenterAndExpand" >
                 <Button x:Name="btnguardar" Text="Guardar" HeightRequest="50" WidthRequest="158"  BackgroundColor="#2196f3"  CornerRadius="10" FontSize="15"
-                        TextColor="Black" FontAttributes="Bold"  Clicked="btnguardar_Clicked"  ImageSource="guardarr" />
+                        TextColor="Black" FontAttributes="Bold"    ImageSource="guardarr" Clicked="btnguardar_Clicked" />
                 
                 <Button x:Name="btnlista" Text="Lista" HeightRequest="50"  BackgroundColor="#2196f3" FontSize="15"  CornerRadius="10"
                         WidthRequest="150"  TextColor="black" FontAttributes="Bold" Clicked="btnlista_Clicked"  ImageSource="lista" />
