@@ -168,67 +168,17 @@ namespace PM2E2GRUPO4
 
             private async void btnDetener_Clicked(object sender, EventArgs e)
         {
-            Grabar.IsEnabled = true; 
-            btnDetener.IsEnabled = false; 
- 
-            Grabando = false; 
-            lblmin.Text ="00" ; 
-            lblseg.Text="00" ; 
-            lblstatus.Text = "Grabacion Terminada"; 
- 
-            descripcion.IsEnabled = true;
-            btnguardar.IsEnabled = true;
-            btnlista.IsEnabled = true;
-            await audioRecorderService.StopRecording();
 
-             var stream = audioRecorderService.GetAudioFileStream(); 
-            bool NoExist = File.Exists(nombre); 
-            if (!NoExist) 
-            { 
-                /////////Audio Existente por Defecto 
-            } 
- 
-            else 
-            { 
-                String[] FRecord = nombre.Split('/'); 
-                int tamfile = FRecord.Length; 
-                String nombreA = FRecord[tamfile - 1]; 
-                String valorResultante = new String(nombreA.Where(Char.IsDigit).ToArray()); 
- 
-                if (String.IsNullOrEmpty(valorResultante)) 
-                { 
-                    /////// Usar el mismo archivo ////// 
-                } 
-                else 
-                { 
-                    int num = Int32.Parse(valorResultante);                    
-                    nombre = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), DateTime.Now.ToString() + " " + "Audio_.mp3"); 
-                } 
-            } 
- 
-            using (var audiofile = new FileStream(nombre, FileMode.Create, FileAccess.Write)) 
-            { 
-                stream.CopyTo(audiofile); 
-            } 
-            if (GraAudio) 
-            { 
-                var recording = new modelo 
-                { 
-                    direccion = nombre.ToString(), 
-                    descripcion = txtdescrip.Text, 
-                    fecha = DateTime.Now 
-                }; 
-                var dataA= await App.BaseDatos.ASave(recording); 
- 
-                if(dataA != 0) 
-                { 
-                    await DisplayAlert("AVISO", "Audio Guardado", "Aceptar"); 
-                } 
-                else 
-                { 
-                    await DisplayAlert("AVISO", "Audio NO Guardado", "Aceptar"); 
-              }   
-            }  
+        }
+
+        private void btnlista_Clicked(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnguardar_Clicked(object sender, EventArgs e)
+        {
+
         }
 
         private async void btnlista_Clicked(object sender, EventArgs e)
