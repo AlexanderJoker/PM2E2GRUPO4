@@ -4,7 +4,7 @@
              x:Class="PM2E2GRUPO4.MainPage">
  <ScrollView>
     <StackLayout>
-      <Image Source="uth.png" HeightRequest="180" WidthRequest="100" />
+      <Image Source="uth.png" HeightRequest="120" WidthRequest="60" />
             <Label Text="EXAMEN PROGRAMACION MOVIL II" FontSize="20" HorizontalOptions="Center"  Margin="0, 0, 0, 15" />
 
             <Frame CornerRadius= "40" BackgroundColor="#EBCD87" BorderColor="#54CA3F">
