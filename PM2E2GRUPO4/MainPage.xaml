@@ -46,7 +46,7 @@
 
             <Button x:Name="btnsalir"
                     Text="Salir"  BackgroundColor="#f44336"  CornerRadius="10" TextColor="black" FontSize="15" FontAttributes="Bold"
-                    Margin="60,10,60,25" Clicked="btnsalir_Clicked" />
+                    Margin="60,10,60,25" Clicked="btnsalir_Clicked" Image="salir" />
     </StackLayout>
  </ScrollView>
 </ContentPage>
