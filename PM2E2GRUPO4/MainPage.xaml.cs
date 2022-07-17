@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
+using PM2E2GRUPO4.Models;
 
 namespace PM2E2GRUPO4
 {
@@ -30,9 +31,9 @@ namespace PM2E2GRUPO4
 
         }
 
-        private void btnlista_Clicked(object sender, EventArgs e)
+        private async void btnlista_Clicked(object sender, EventArgs e)
         {
-
+            
         }
 
         private void btnguardar_Clicked(object sender, EventArgs e)
