@@ -14,28 +14,23 @@ namespace PM2E2GRUPO4.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class MapaPage : ContentPage
     {
-        string mapEtiqueta, mapDireccion;
-        double mapLongitud, mapLatitud;
-
-        public MapaPage(String mapEtiquetaCt, String mapDireccionCt, double mapLongitudCt, double mapLatitudCt)
+        
+        public MapaPage()
         {
             InitializeComponent();
-            mapEtiqueta = mapEtiquetaCt;
-            mapDireccion = mapDireccionCt;
-            mapLongitud = mapLongitudCt;
-            mapLatitud = mapLatitudCt;
+            
         }
 
         private async void btnRuta_Clicked(object sender, EventArgs e)
         {
-            var options = new MapLaunchOptions { NavigationMode = NavigationMode.Driving };
+            /*var options = new MapLaunchOptions { NavigationMode = NavigationMode.Driving };
             var location = new Location(mapLatitud, mapLongitud);
-            await Xamarin.Essentials.Map.OpenAsync(location, options);
+            await Xamarin.Essentials.Map.OpenAsync(location, options);*/
         }
 
         protected async override void OnAppearing()
         {
-            base.OnAppearing();
+           /* base.OnAppearing();
 
             Pin ubicacion = new Pin();
             ubicacion.Label = mapEtiqueta;
@@ -58,13 +53,13 @@ namespace PM2E2GRUPO4.Views
                 {
                     await localizacion.StartListeningAsync(TimeSpan.FromSeconds(10), 100);
                 }
-            }
+            }*/
         }
 
         private void Localizacion_positionChanged(object sender, Plugin.Geolocator.Abstractions.PositionEventArgs e)
         {
-            var posicion_mapa = new Position(e.Position.Latitude, e.Position.Longitude);
-            mpsitios.MoveToRegion(new MapSpan(posicion_mapa, 1, 1));
+           /* var posicion_mapa = new Position(e.Position.Latitude, e.Position.Longitude);
+            mpsitios.MoveToRegion(new MapSpan(posicion_mapa, 1, 1));*/
         }
     }
 }

@@ -15,7 +15,7 @@
 
             <ListView x:Name="ListaSitios" HorizontalOptions="StartAndExpand" VerticalOptions="FillAndExpand"
                 SeparatorColor="#253DBC" SeparatorVisibility="Default" HasUnevenRows="True"
-                ItemSelected="ListaSitios_ItemSelected" ItemTapped="ListaSitios_ItemTapped" AutomationProperties.IsInAccessibleTree="False">
+                ItemTapped="ListaSitios_ItemTapped" AutomationProperties.IsInAccessibleTree="False">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
@@ -47,61 +47,6 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-
-
-            <StackLayout Margin="0,0,0,0" Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
-
-                <Button 
-                        x:Name="btnDelete"
-                        Text="Delete" 
-                        HeightRequest="50"
-                        WidthRequest="158"
-                        CornerRadius="10"
-                        BackgroundColor="#F7DC34"
-                        FontSize="15"
-                        TextColor="#FAF7F7"
-                        FontAttributes="Bold"
-                        Clicked="btnDelete_Clicked" />
-
-                <Button 
-                        x:Name="btnUpdate"
-                        Text="Update"
-                        HeightRequest="50"
-                        WidthRequest="158"
-                        CornerRadius="10"
-                        BackgroundColor="#EEEB30"
-                        FontSize="15"
-                        TextColor="#FFFFFF"
-                        FontAttributes="Bold"
-                        Clicked="btnUpdate_Clicked" />
-
-                
-            </StackLayout>
-
-           
-
-            <Button 
-                    x:Name="btnaudio"
-                    Text="Reproducir Audio"
-                    CornerRadius="10"
-                    BackgroundColor="#F8E212"
-                    FontSize="15"
-                    TextColor="#FDFDFA"
-                    FontAttributes="Bold"
-                    Margin="33.5,5,33.5,20"
-                    Clicked="btnaudio_Clicked" />
-
-
-            <Button 
-                    x:Name="btnVerMapa"
-                    Text="Ver Mapa"
-                    CornerRadius="10"
-                    BackgroundColor="#CED215"
-                    FontSize="15"
-                    TextColor="#F8F7F7"
-                    FontAttributes="Bold"
-                    Margin="33.5,5,33.5,0"
-                    Clicked="btnVerMapa_Clicked" />
 
         </StackLayout>
     </ContentPage.Content>

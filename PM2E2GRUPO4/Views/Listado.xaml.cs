@@ -18,6 +18,7 @@ using System.IO;
 //using Android.Util;
 using Plugin.AudioRecorder;
 using MediaManager;
+using Android.Util;
 //using Android.Media;
 //using Stream = Android.Media.Stream;
 
@@ -83,7 +84,7 @@ namespace PM2E2GRUPO4.Views
             if (AccesoInternet == NetworkAccess.Internet)
             {
                 //sl.IsVisible = true;
-                
+
 
                 List<SitiosListado> listapersonas = new List<SitiosListado>();
                 listapersonas = await SitApi.ControllerObtenerListaSitios();
@@ -99,18 +100,88 @@ namespace PM2E2GRUPO4.Views
                 }
 
                 //sl.IsVisible = false;
-                
+
             }
         }
 
         private async void ListaSitios_ItemTapped(object sender, ItemTappedEventArgs e)
         {
             string action = await DisplayActionSheet("Elige La Accion que desea realizar", "Cancelar", null, "Eliminar", "Modificar", "Ir al Mapa", "Reproducir Audio");
+            if (action.Contains("Reproducir Audio"))
+            {
+                var rep = e.Item as SitiosListado;
+                string rep2 = rep.Audio;
+                byte[] rep3 = Base64.Decode(rep2, Base64Flags.Default);
+
+                await CrossMediaManager.Current.Play(rep3);
+            }
+
+            if (action.Contains("Ir al Mapa"))
+            {
+                var rep = e.Item as SitiosListado;
+                Ubicacion ubi = new Ubicacion
+                {
+                    latitud = Convert.ToDouble(rep.Latitud),
+                    longitud = Convert.ToDouble(rep.Longitud),
+                };
+
+                MapaPage mapita = new MapaPage();
+                mapita.BindingContext = ubi;
+                await Navigation.PushAsync(mapita);
+            }
+
+            if (action.Contains("Modificar"))
+            {
+                var rep = e.Item as SitiosListado;
+                Object sit = new
+                {
+                    id = rep.Id,
+                    latitud = Convert.ToDouble(rep.Latitud),
+                    longitud = Convert.ToDouble(rep.Longitud),
+                    descripcion = rep.Descripcion,
+                    imagen = ImageSource.FromStream(() => new MemoryStream(Convert.FromBase64String(rep.Foto2))),
+                    audio = decodedString
+                };
+
+                Update_Page up = new Update_Page();
+                up.BindingContext = sit;
+                await Navigation.PushAsync(up);
+            }
+
+            if (action.Contains("Eliminar"))
+            {
+                bool res = await DisplayAlert("Notificación" , "¿Esta seguro de eliminar el sitio?", "Sí", "Cancelar");
+                if (res)
+                {
+                    var rep = e.Item as SitiosListado;
+
+                    Uri RequestUri = new Uri("http://activaciones3-02.000webhostapp.com/api/deleteLugar.php");
+                    var client = new HttpClient();
+                    var json = JsonConvert.SerializeObject(rep.Id);
+
+                    HttpRequestMessage request = new HttpRequestMessage
+                    {
+                        Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json"),
+                        Method = HttpMethod.Post,
+                        RequestUri = RequestUri
+                    };
+
+                    HttpResponseMessage response = await client.SendAsync(request);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        await DisplayAlert("Notificación", "Registro eliminado con éxito", "Ok");
+                        lista.Clear();
+                        GetSitiosList();
+                    }
+                    else
+                    {
+                        await DisplayAlert("Notificación", "Ha ocurrido un error", "Ok");
+                    }
+                }
+            }
         }
 
-        private void ListaSitios_ItemSelected(object sender, SelectedItemChangedEventArgs e)
-        {
 
-        }
     }
 }

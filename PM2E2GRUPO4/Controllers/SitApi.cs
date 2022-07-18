@@ -48,6 +48,7 @@ namespace PM2E2GRUPO4.Controllers
                                             item.latitud.ToString(), 
                                             item.longitud.ToString(),
                                             ImageSource.FromStream(() => stream),
+                                            img64,
                                             audio64, 
                                             decodedString
                                             ));
