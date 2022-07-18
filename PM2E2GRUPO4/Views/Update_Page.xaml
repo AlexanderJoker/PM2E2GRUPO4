@@ -7,7 +7,7 @@
             <Label Text="Editar" FontSize="20" HorizontalOptions="Center"  Margin="0, 0, 0, 15" />
             
             <Frame CornerRadius= "40" BackgroundColor="#EBCD87" BorderColor="#54CA3F">
-                <Image x:Name="UbiImagen" HeightRequest="300"  WidthRequest="200" BackgroundColor="#FBEAC2" Aspect="AspectFit"  Margin="35,0">
+                <Image x:Name="UbiImagen" HeightRequest="300"  WidthRequest="200" BackgroundColor="#FBEAC2" Aspect="AspectFit"  Margin="35,0" Source="{Binding imagen}">
                     <Image.GestureRecognizers>
                         <TapGestureRecognizer
                             Tapped="TapGestureRecognizer_Tapped"
@@ -16,34 +16,53 @@
                 </Image>
             </Frame>
             <Label Text="Para editar toca el recuadro de arriba" FontSize="15" HorizontalOptions="Center"  Margin="0, 0, 0, 15" />
-
-            <Entry x:Name="lat"
+            <ScrollView>
+                <StackLayout>
+                    <Entry x:Name="lat"
                    Placeholder="Latitud"
+                   Text="{Binding longitud}"
                    Margin="40,10,40,10"
                    IsEnabled="False" />
 
-            <Entry  x:Name="long"
+                    <Entry  x:Name="longg"
                     Placeholder="Longitud"
+                    Text="{Binding latitud}"
                     Margin="40,10,40,10"
                     IsEnabled="False" />
-            
-            <Entry x:Name="desc"
+
+                    <Entry x:Name="desc"
                    Placeholder="Descripcion de el Lugar"
+                           TextChanged="desc_TextChanged"
+                   Text="{Binding descripcion}"
                    Margin="40,10,40,10" />
+                    <Entry x:Name="txtid" Text="{Binding id}" IsVisible="false"/>
+                    <Label x:Name="lblstatu" Text="Sin Grabar" HorizontalOptions="Center" FontSize="15"/>
+                    <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
+                        <Label x:Name="lblmin" Text="00" FontSize = "35"/>
+                        <Label Text=":" FontSize = "35"/>
+                        <Label x:Name="lblseg" Text="00" FontSize = "35"/>
+                    </StackLayout>
 
-            <Label x:Name="lblstatu" Text="Sin Grabar" HorizontalOptions="Center" FontSize="15"/>
-            <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
-                <Label x:Name="lblmin" Text="00" FontSize = "35"/>
-                <Label Text=":" FontSize = "35"/>
-                <Label x:Name="lblseg" Text="00" FontSize = "35"/>
-            </StackLayout>
+                    <Grid ColumnDefinitions="*,*">
+                        <Button x:Name="Grabar" Image="microfono" CornerRadius="10" BackgroundColor="#54CA3F" Text="Grabar" TextColor="Black" Clicked="Grabar_Clicked"/>
 
-            <Grid ColumnDefinitions="*,*">
-                <Button x:Name="Grabar" Image="microfono" CornerRadius="10" BackgroundColor="#54CA3F" Text="Grabar" TextColor="Black" Clicked="Grabar_Clicked"/>
-
-                <Button Grid.Column="1" x:Name="btnDetener" CornerRadius="10" IsEnabled="False" BackgroundColor="#54CA3F" Image="detener" TextColor="Black"
+                        <Button Grid.Column="1" x:Name="btnDetener" CornerRadius="10" IsEnabled="False" BackgroundColor="#54CA3F" Image="detener" TextColor="Black"
                         Text="Detener" Clicked="btnDetener_Clicked"/>
-            </Grid>
+                    </Grid>
+                    <Button x:Name="btnedit"
+                            Text="Actualizar"
+                            HeightRequest="50"
+                            WidthRequest="158"
+                            IsEnabled="False"
+                            BackgroundColor="#4caf50"
+                            CornerRadius="10"
+                            FontSize="15"
+                            TextColor="#FFF"
+                            FontAttributes="Bold"
+                            Clicked="btnedit_Clicked" />
+                </StackLayout>
+            </ScrollView>
+            
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

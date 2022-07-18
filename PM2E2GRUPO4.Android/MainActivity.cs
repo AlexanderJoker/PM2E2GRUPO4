@@ -24,6 +24,8 @@ namespace PM2E2GRUPO4.Droid
             { ActivityCompat.RequestPermissions(this, new String[] { Manifest.Permission.RecordAudio }, 1); }
             if (ContextCompat.CheckSelfPermission(this, Manifest.Permission.ReadExternalStorage) != Permission.Granted)
             { ActivityCompat.RequestPermissions(this, new String[] { Manifest.Permission.ReadExternalStorage }, 1); }
+            if (ContextCompat.CheckSelfPermission(this, Manifest.Permission.AccessFineLocation) != Permission.Granted)
+            { ActivityCompat.RequestPermissions(this, new String[] { Manifest.Permission.AccessFineLocation }, 1); }
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             LoadApplication(new App());

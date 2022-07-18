@@ -5,19 +5,19 @@
              x:Class="PM2E2GRUPO4.Views.MapaPage">
     <ContentPage.Content>
         <StackLayout>
-            <maps:Map x:Name="mpsitios" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" 
-                      IsShowingUser="True" />
-
-            <Button x:Name="btnRuta"
-                    Text="Obtener Ruta" 
+            <Button x:Name="btnDriving"
+                    Text="Ir a Ruta" 
                     CornerRadius="10"
                     FontSize="15"
                     BackgroundColor="DeepSkyBlue"
                     TextColor="White"
                     FontAttributes="Bold"
                     Margin="15,0,15,6"
-                    Clicked="btnRuta_Clicked" />
-
+                    Clicked="btnDriving_Clicked" />
+            <maps:Map x:Name="mapitaa" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"  IsShowingUser="True" />
+            <Label x:Name="lbllat" IsVisible="false" Text="{Binding latitud}"/>
+            <Label x:Name="lbllong" IsVisible="false" Text="{Binding longitud}"/>
+            <Label x:Name="lbldesc" IsVisible="false" Text="{Binding descripcion}"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

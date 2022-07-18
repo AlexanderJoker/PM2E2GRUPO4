@@ -20,40 +20,39 @@ namespace PM2E2GRUPO4.Controllers
             List<SitiosListado> listasitios = new List<SitiosListado>();
             try
             {
-                using (HttpClient cliente = new HttpClient())
-            {
-                var respuesta = await cliente.GetAsync("https://activaciones3-02.000webhostapp.com/api/getLugares.php");
-
-                if (respuesta.IsSuccessStatusCode)
+                using (HttpClient requestHTTP = new HttpClient())
                 {
-                    string contenido = respuesta.Content.ReadAsStringAsync().Result.ToString();
+                var repomse = await requestHTTP.GetAsync("https://activaciones3-02.000webhostapp.com/api/getLugares.php");
 
-                    dynamic dyn = JsonConvert.DeserializeObject(contenido);
-                    byte[] newBytes = null;
-                    if (contenido.Length > 28)
+                if (repomse.IsSuccessStatusCode)
+                {
+                    string content = repomse.Content.ReadAsStringAsync().Result.ToString();
+
+                    dynamic vardinamic = JsonConvert.DeserializeObject(content);
+                    byte[] imgBytes = null;
+
+                    foreach (var obj in vardinamic.LISTAD0)
                     {
+                            //OBTIENE LA FOTO EN JSON BASE64 Y LA PASA A STREAM
+                        string imgEncript = obj.foto.ToString();
+                        imgBytes = Convert.FromBase64String(imgEncript);
+                        var stream = new MemoryStream(imgBytes);
+                            //OBTENER EL AUDIO Y SACARLO DE BASE 64
+                        string audioencript = obj.audio.ToString();
+                        byte[] audioBytes = Base64.Decode(audioencript, Base64Flags.Default);
 
-                        foreach (var item in dyn.LISTAD0)
-                        {
-                            string img64 = item.foto.ToString();
-                            newBytes = Convert.FromBase64String(img64);
-                            var stream = new MemoryStream(newBytes);
-
-                            string audio64 = item.audio.ToString();
-                            byte[] decodedString = Base64.Decode(audio64, Base64Flags.Default);
-
-                            listasitios.Add(new SitiosListado(
-                                            item.id.ToString(), 
-                                            item.descripcion.ToString(),
-                                            item.latitud.ToString(), 
-                                            item.longitud.ToString(),
-                                            ImageSource.FromStream(() => stream),
-                                            img64,
-                                            audio64, 
-                                            decodedString
-                                            ));
-                        }
+                        listasitios.Add(new SitiosListado(
+                                        obj.id.ToString(), 
+                                        obj.descripcion.ToString(),
+                                        obj.latitud.ToString(), 
+                                        obj.longitud.ToString(),
+                                        ImageSource.FromStream(() => stream),
+                                        imgEncript,
+                                        audioencript, 
+                                        audioBytes
+                                        ));
                     }
+                    
                 }
             }
             }

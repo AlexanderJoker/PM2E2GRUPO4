@@ -30,7 +30,7 @@ namespace PM2E2GRUPO4
         byte[] ImagenSave, AudioSave;
         private readonly AudioRecorderService audioRecorderService = new AudioRecorderService()
         {
-            StopRecordingAfterTimeout = true,
+            StopRecordingAfterTimeout = false,
             TotalAudioTimeout = TimeSpan.FromSeconds(180)
         };
 
@@ -226,9 +226,9 @@ namespace PM2E2GRUPO4
 
         private async void btnguardar_Clicked(object sender, EventArgs e)
         {
-            if (String.IsNullOrEmpty(descripcion.Text))
+            if (String.IsNullOrEmpty(descripcion.Text) || descripcion.Text.Length>100)
             {
-                await DisplayAlert("Alerta", "Hay Campos Vacios", "Ok");
+                await DisplayAlert("Alerta", "Hay Campos Vacios o descripcion muy larga", "Ok");
             }
             else
             {
@@ -253,13 +253,13 @@ namespace PM2E2GRUPO4
                 var json = JsonConvert.SerializeObject(save);
                 var contenidoJson = new StringContent(json, Encoding.UTF8, "application/json");
                 var respuestajson = await client.PostAsync("/api/setLugar.php", contenidoJson);
-                var result = await respuestajson.Content.ReadAsStringAsync();
+                //var result = await respuestajson.Content.ReadAsStringAsync();
 
                 if (respuestajson.StatusCode == HttpStatusCode.OK)
                 {
                     JObject respuestastojson = JObject.Parse(respuestajson.Content.ReadAsStringAsync().Result);
 
-                    await DisplayAlert("success", "datos guardados correctamente", "ok");
+                    await DisplayAlert("success", "Datos Guardados correctamente!", "ok");
 
                     descripcion.Text = "";
                     ImagenSave = null;

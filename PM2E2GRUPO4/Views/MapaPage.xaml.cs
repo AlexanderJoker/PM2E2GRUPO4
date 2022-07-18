@@ -14,34 +14,41 @@ namespace PM2E2GRUPO4.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class MapaPage : ContentPage
     {
-        
         public MapaPage()
         {
             InitializeComponent();
-            
         }
 
         private async void btnRuta_Clicked(object sender, EventArgs e)
         {
-            /*var options = new MapLaunchOptions { NavigationMode = NavigationMode.Driving };
-            var location = new Location(mapLatitud, mapLongitud);
-            await Xamarin.Essentials.Map.OpenAsync(location, options);*/
+            
         }
 
+
+        private void Localizacion_positionChanged(object sender, Plugin.Geolocator.Abstractions.PositionEventArgs e)
+        {
+            int value1 = 1; int value2 = 1;
+            Position movetomaps = new Position(Convert.ToDouble(lbllat.Text), Convert.ToDouble(lbllong.Text));
+            mapitaa.MoveToRegion(new MapSpan(movetomaps, value1, value2));
+        }
         protected async override void OnAppearing()
         {
-           /* base.OnAppearing();
-
+           base.OnAppearing();
+            double Latitud = Convert.ToDouble(lbllat.Text);
+            double Longitud = Convert.ToDouble(lbllong.Text);
+            //COLOCACION DE PIN EN EL MAPA
             Pin ubicacion = new Pin();
-            ubicacion.Label = mapEtiqueta;
-            ubicacion.Address = mapDireccion;
-            ubicacion.Type = PinType.Place;
-            ubicacion.Position = new Position(mapLatitud, mapLongitud);
-            mpsitios.Pins.Add(ubicacion);
+            ubicacion.Label = ""+ lbldesc.Text;
+            ubicacion.Address = ""+ Latitud+","+ Longitud;
+            ubicacion.Type = PinType.Generic;
+            ubicacion.Position = new Position(Latitud, Longitud);
+            mapitaa.Pins.Add(ubicacion);
 
-            mpsitios.Pins.Add(ubicacion);
-
-            mpsitios.MoveToRegion(new MapSpan(new Position(mapLatitud, mapLongitud), 0.05, 0.05));
+            //MOVERSE A LA REGION DE LA LOCALIZACION OBTENIDA
+            var location = await Geolocation.GetLocationAsync();
+            if (location == null) { location = await Geolocation.GetLastKnownLocationAsync(); }
+            //mapitaa.MoveToRegion(new MapSpan(new Position(Latitud, Longitud), 0.05, 0.05));
+            mapitaa.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(Latitud, Longitud), Distance.FromMeters(100)));
 
             var localizacion = CrossGeolocator.Current;
 
@@ -53,13 +60,15 @@ namespace PM2E2GRUPO4.Views
                 {
                     await localizacion.StartListeningAsync(TimeSpan.FromSeconds(10), 100);
                 }
-            }*/
+            }
         }
 
-        private void Localizacion_positionChanged(object sender, Plugin.Geolocator.Abstractions.PositionEventArgs e)
+        private async void btnDriving_Clicked(object sender, EventArgs e)
         {
-           /* var posicion_mapa = new Position(e.Position.Latitude, e.Position.Longitude);
-            mpsitios.MoveToRegion(new MapSpan(posicion_mapa, 1, 1));*/
+            Double txtlat = Convert.ToDouble(lbllat.Text);
+            Double txtlogn = Convert.ToDouble(lbllong.Text);
+            var geolocator = new Location(txtlat, txtlogn);
+            await Xamarin.Essentials.Map.OpenAsync(geolocator, new MapLaunchOptions { NavigationMode = NavigationMode.Driving });
         }
     }
 }

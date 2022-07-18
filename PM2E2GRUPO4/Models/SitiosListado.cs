@@ -7,7 +7,7 @@ namespace PM2E2GRUPO4.Models
 {
     public class SitiosListado
     {
-        public SitiosListado(string Id, string Descripcion, string Latitud, string Longitud, ImageSource Foto, string Foto2, string Audio, byte[] decodedStringAudio)
+        public SitiosListado(string Id, string Descripcion, string Latitud, string Longitud, ImageSource Foto, string Foto2, string Audio, byte[] audioBytes)
         {
             this.Id = Id;
             this.Descripcion = Descripcion;
@@ -16,7 +16,7 @@ namespace PM2E2GRUPO4.Models
             this.Foto = Foto;
             this.Foto2 = Foto2;
             this.Audio = Audio;
-            this.decodedStringAudio = decodedStringAudio;
+            this.decodedStringAudio = audioBytes;
         }
 
         public string Id { get; set; }

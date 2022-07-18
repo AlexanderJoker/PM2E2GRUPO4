@@ -19,6 +19,7 @@ using System.IO;
 using Plugin.AudioRecorder;
 using MediaManager;
 using Android.Util;
+using Android.Media;
 //using Android.Media;
 //using Stream = Android.Media.Stream;
 
@@ -30,21 +31,13 @@ namespace PM2E2GRUPO4.Views
     public partial class Listado : ContentPage
     {
         private readonly AudioPlayer audioPlayer = new AudioPlayer();
-
+        protected MediaPlayer player;
+        AudioPlayer player2;
         //private readonly MediaPlayer mediaPlayer = new MediaPlayer();
-
-        string txtDescripcionSeleccionada;
-        double dbLatitud, dbLongitud;
 
         List<SitiosListado> lista = new List<SitiosListado>();
 
-        Object objSitioGlobal = null;
-        string idGlobal = "";
-        string sitioGlobal = "";
-        string latitud = "";
-        string longitud = "";
-
-        string audio64 = null;
+   
         byte[] decodedString = null;
 
 
@@ -53,86 +46,81 @@ namespace PM2E2GRUPO4.Views
             InitializeComponent();
             lista.Clear();
             GetSitiosList();
+            player2 = new AudioPlayer();
         }
-
-        private void btnDelete_Clicked(object sender, EventArgs e)
+        protected override void OnAppearing()
         {
-
+            base.OnAppearing();
+            lista.Clear();
+            GetSitiosList();
         }
-
-        private void btnUpdate_Clicked(object sender, EventArgs e)
-        {
-
-        }
-
-        private void btnaudio_Clicked(object sender, EventArgs e)
-        {
-
-        }
-
-        private void btnVerMapa_Clicked(object sender, EventArgs e)
-        {
-
-        }
-
-
-
         private async void GetSitiosList()
-        {
-            var AccesoInternet = Connectivity.NetworkAccess;
-
-            if (AccesoInternet == NetworkAccess.Internet)
+        {//LLENA LA LISTA
+            if (Connectivity.NetworkAccess == NetworkAccess.Internet)
             {
-                //sl.IsVisible = true;
+                List<SitiosListado> listLugares = new List<SitiosListado>();
+                listLugares = await SitApi.ControllerObtenerListaSitios();
 
-
-                List<SitiosListado> listapersonas = new List<SitiosListado>();
-                listapersonas = await SitApi.ControllerObtenerListaSitios();
-
-                if (listapersonas.Count > 0)
+                if (listLugares.Count >= 1)
                 {
                     ListaSitios.ItemsSource = null;
-                    ListaSitios.ItemsSource = listapersonas;
+                    ListaSitios.ItemsSource = listLugares;
                 }
                 else
                 {
-                    await DisplayAlert("Notificación", $"Lista vacía, ingrese datos", "Ok");
+                    await DisplayAlert("INFO", "Aun no hay Lugares por aki", "OK");
                 }
-
-                //sl.IsVisible = false;
-
             }
         }
 
         private async void ListaSitios_ItemTapped(object sender, ItemTappedEventArgs e)
         {
+            var rep = e.Item as SitiosListado;
             string action = await DisplayActionSheet("Elige La Accion que desea realizar", "Cancelar", null, "Eliminar", "Modificar", "Ir al Mapa", "Reproducir Audio");
-            if (action.Contains("Reproducir Audio"))
+            if (rep.Audio != null)
             {
-                var rep = e.Item as SitiosListado;
-                string rep2 = rep.Audio;
-                byte[] rep3 = Base64.Decode(rep2, Base64Flags.Default);
-
-                await CrossMediaManager.Current.Play(rep3);
+                if (action.Contains("Reproducir Audio"))
+                {
+                    //SACAR EL AUDIO DE EL MODELO DE SITIOS
+                    string rep2 = rep.Audio;
+                    byte[] rep3 = Base64.Decode(rep2, Base64Flags.Default);
+                    //CONVERSION Y CREACION DE ARCHIVO DE AUDIO TEMPORAL
+                    string fileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "sample.wav");
+                    System.IO.Stream stream = new MemoryStream(rep3);
+                    using (var fileStream = new FileStream(fileName, FileMode.Create, FileAccess.Write)) { stream.CopyTo(fileStream); }
+                    //await CrossMediaManager.Current.Play(fileName);
+                    player2.Play(fileName);
+                }
             }
+            else {
+                await DisplayAlert("ALERTA","AKI NO HAY AUDIOS","OK");
+            }
+            if (action.Contains("Cancelar")) 
+            {
 
+            }
+            if (action.Contains(""))
+            {
+
+            }
             if (action.Contains("Ir al Mapa"))
             {
-                var rep = e.Item as SitiosListado;
                 Ubicacion ubi = new Ubicacion
                 {
                     latitud = Convert.ToDouble(rep.Latitud),
                     longitud = Convert.ToDouble(rep.Longitud),
+                    descripcion = rep.Descripcion
                 };
 
                 MapaPage mapita = new MapaPage();
                 mapita.BindingContext = ubi;
+                mapita.Title="Lat="+ubi.latitud + ",Long=" + ubi.longitud;
                 await Navigation.PushAsync(mapita);
             }
 
             if (action.Contains("Modificar"))
             {
-                var rep = e.Item as SitiosListado;
+                //OBJETO TEMPORAL PARA ENVIARLO A BINDING DE EDITAR
                 Object sit = new
                 {
                     id = rep.Id,
@@ -145,38 +133,35 @@ namespace PM2E2GRUPO4.Views
 
                 Update_Page up = new Update_Page();
                 up.BindingContext = sit;
+                up.Title = "ACTUALIZANDO ID: " + rep.Id;
                 await Navigation.PushAsync(up);
             }
 
             if (action.Contains("Eliminar"))
             {
-                bool res = await DisplayAlert("Notificación" , "¿Esta seguro de eliminar el sitio?", "Sí", "Cancelar");
-                if (res)
+                bool r = await DisplayAlert("ALERTA" , "¿Esta seguro de eliminar el sitio?", "Sí", "Cancelar");
+                if (r)
                 {
-                    var rep = e.Item as SitiosListado;
-
-                    Uri RequestUri = new Uri("http://activaciones3-02.000webhostapp.com/api/deleteLugar.php");
-                    var client = new HttpClient();
-                    var json = JsonConvert.SerializeObject(rep.Id);
-
-                    HttpRequestMessage request = new HttpRequestMessage
+                    Object obb = new { id = rep.Id };
+                    var json = JsonConvert.SerializeObject(obb);
+                    var request = new HttpRequestMessage
                     {
                         Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json"),
                         Method = HttpMethod.Post,
-                        RequestUri = RequestUri
+                        RequestUri = new Uri("http://activaciones3-02.000webhostapp.com/api/deleteLugar.php")
                     };
 
-                    HttpResponseMessage response = await client.SendAsync(request);
-
+                    //SI RESPONDE CON UN CODIGO 200 SE ELIMINO
+                    var response = await new HttpClient().SendAsync(request);
                     if (response.IsSuccessStatusCode)
                     {
-                        await DisplayAlert("Notificación", "Registro eliminado con éxito", "Ok");
                         lista.Clear();
                         GetSitiosList();
+                        await DisplayAlert("INFO", "Registro eliminado con éxito", "Ok");
                     }
                     else
                     {
-                        await DisplayAlert("Notificación", "Ha ocurrido un error", "Ok");
+                        await DisplayAlert("ERROR", "Ha ocurrido un error", "Ok");
                     }
                 }
             }
