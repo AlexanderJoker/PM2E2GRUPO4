@@ -13,9 +13,9 @@
                            HorizontalOptions="Center" HeightRequest="80" WidthRequest="80"/>
             </AbsoluteLayout>
 
-            <ListView x:Name="LitaSitios" HorizontalOptions="StartAndExpand" VerticalOptions="FillAndExpand"
+            <ListView x:Name="ListaSitios" HorizontalOptions="StartAndExpand" VerticalOptions="FillAndExpand"
                 SeparatorColor="#253DBC" SeparatorVisibility="Default" HasUnevenRows="True"
-                ItemSelected="LiSitios_ItemSelected" AutomationProperties.IsInAccessibleTree="False">
+                ItemSelected="ListaSitios_ItemSelected" ItemTapped="ListaSitios_ItemTapped" AutomationProperties.IsInAccessibleTree="False">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
@@ -61,7 +61,7 @@
                         FontSize="15"
                         TextColor="#FAF7F7"
                         FontAttributes="Bold"
-                        Clicked="btnEliminar_Clicked" />
+                        Clicked="btnDelete_Clicked" />
 
                 <Button 
                         x:Name="btnUpdate"
@@ -73,7 +73,7 @@
                         FontSize="15"
                         TextColor="#FFFFFF"
                         FontAttributes="Bold"
-                        Clicked="btnActualizar_Clicked" />
+                        Clicked="btnUpdate_Clicked" />
 
                 
             </StackLayout>
@@ -89,7 +89,7 @@
                     TextColor="#FDFDFA"
                     FontAttributes="Bold"
                     Margin="33.5,5,33.5,20"
-                    Clicked="btnescucharaudio_Clicked" />
+                    Clicked="btnaudio_Clicked" />
 
 
             <Button 

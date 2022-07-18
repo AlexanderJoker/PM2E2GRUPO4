@@ -10,7 +10,8 @@ namespace PM2E2GRUPO4
         {
             InitializeComponent();
 
-            MainPage = new MainPage();
+            
+            MainPage = new NavigationPage(new MainPage());
         }
 
         protected override void OnStart()
