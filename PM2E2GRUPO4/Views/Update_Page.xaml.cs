@@ -24,6 +24,7 @@ namespace PM2E2GRUPO4.Views
         byte[] ImagenSave;
         bool GraAudio = false;
         public String nombre;
+        public bool tomefoto = false;
         int min, seg;
         bool Grabando;
         private readonly AudioRecorderService audioRecorderService = new AudioRecorderService()
@@ -57,7 +58,7 @@ namespace PM2E2GRUPO4.Views
 
                     TomarFoto.GetStream().CopyTo(memoryStream);
                     ImagenSave = memoryStream.ToArray();
-
+                    tomefoto = true;
                     UbiImagen.Source = ImageSource.FromStream(() => { return TomarFoto.GetStream(); });
                 }
 
@@ -212,46 +213,55 @@ namespace PM2E2GRUPO4.Views
             }
             else
             {
-                string pathBase64Imagen = Convert.ToBase64String(ImagenSave);
-                string audio = nombre;
-                byte[] fileByte = System.IO.File.ReadAllBytes(audio);
-                string pathBase64Audio = Convert.ToBase64String(fileByte);
-                Sitios save = new Sitios
+                if (lblstatu.Text.Contains("Grabacion Terminada") && tomefoto)//solo editar si grabo un audio y tomo foto
                 {
-                    Id = Int32.Parse(txtid.Text),
-                    Descripcion = desc.Text,
-                    Latitud = Convert.ToDouble(lat.Text),
-                    Longitud = Convert.ToDouble(longg.Text),
-                    Foto = pathBase64Imagen,
-                    Audio = pathBase64Audio,
-                };
+                    string pathBase64Imagen = Convert.ToBase64String(ImagenSave);
+                    string audio = nombre;
+                    byte[] fileByte = System.IO.File.ReadAllBytes(audio);
+                    string pathBase64Audio = Convert.ToBase64String(fileByte);
+                    Sitios save = new Sitios
+                    {
+                        Id = Int32.Parse(txtid.Text),
+                        Descripcion = desc.Text,
+                        Latitud = Convert.ToDouble(lat.Text),
+                        Longitud = Convert.ToDouble(longg.Text),
+                        Foto = pathBase64Imagen,
+                        Audio = pathBase64Audio,
+                    };
 
-                Uri RequestUri = new Uri("https://activaciones3-02.000webhostapp.com/api/updateLugar.php");
+                    Uri RequestUri = new Uri("https://activaciones3-02.000webhostapp.com/api/updateLugar.php");
 
-                var client = new HttpClient();
-                client.BaseAddress = new Uri("https://activaciones3-02.000webhostapp.com");
-                var json = JsonConvert.SerializeObject(save);
-                var contenidoJson = new StringContent(json, Encoding.UTF8, "application/json");
-                var respuestajson = await client.PostAsync("/api/updateLugar.php", contenidoJson);
-                var result = await respuestajson.Content.ReadAsStringAsync();
+                    var client = new HttpClient();
+                    client.BaseAddress = new Uri("https://activaciones3-02.000webhostapp.com");
+                    var json = JsonConvert.SerializeObject(save);
+                    var contenidoJson = new StringContent(json, Encoding.UTF8, "application/json");
+                    var respuestajson = await client.PostAsync("/api/updateLugar.php", contenidoJson);
+                    var result = await respuestajson.Content.ReadAsStringAsync();
 
-                if (respuestajson.StatusCode == HttpStatusCode.OK)
-                {
-                    //JObject respuestastojson = JObject.Parse(respuestajson.Content.ReadAsStringAsync().Result);
+                    if (respuestajson.StatusCode == HttpStatusCode.OK)
+                    {
+                        //JObject respuestastojson = JObject.Parse(respuestajson.Content.ReadAsStringAsync().Result);
 
-                    await DisplayAlert("success", "Datos Modificados correctamente!", "ok");
+                        await DisplayAlert("success", "Datos Modificados correctamente!", "ok");
 
-                    desc.Text = "";
-                    ImagenSave = null;
-                    //AudioSave = null;
-                    UbiImagen.Source = null;
-                    lblmin.Text = "00";
-                    lblseg.Text = "00";
-                    await Navigation.PopAsync();
+                        desc.Text = "";
+                        ImagenSave = null;
+                        //AudioSave = null;
+                        UbiImagen.Source = null;
+                        lblmin.Text = "00";
+                        lblseg.Text = "00";
+                        tomefoto = false;
+                        lblstatu.Text = "";
+                        await Navigation.PopAsync();
+                    }
+                    else
+                    {
+                        await DisplayAlert("error", "no hay acceso a la pagina web", "ok");
+                    }
                 }
                 else
                 {
-                    await DisplayAlert("error", "no hay acceso a la pagina web", "ok");
+                    await DisplayAlert("Alerta", "El audio no puede quedar vacio y la foto", "Ok");
                 }
             }
         }
