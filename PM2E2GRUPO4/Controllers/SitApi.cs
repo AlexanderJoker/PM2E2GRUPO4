@@ -18,10 +18,11 @@ namespace PM2E2GRUPO4.Controllers
         public async static Task<List<SitiosListado>> ControllerObtenerListaSitios()
         {
             List<SitiosListado> listasitios = new List<SitiosListado>();
-
-            using (HttpClient cliente = new HttpClient())
+            try
             {
-                var respuesta = await cliente.GetAsync("http://activaciones3-02.000webhostapp.com/api/getLugares.php");
+                using (HttpClient cliente = new HttpClient())
+            {
+                var respuesta = await cliente.GetAsync("https://activaciones3-02.000webhostapp.com/api/getLugares.php");
 
                 if (respuesta.IsSuccessStatusCode)
                 {
@@ -29,29 +30,35 @@ namespace PM2E2GRUPO4.Controllers
 
                     dynamic dyn = JsonConvert.DeserializeObject(contenido);
                     byte[] newBytes = null;
-
-
                     if (contenido.Length > 28)
                     {
 
-                        foreach (var item in dyn.items)
+                        foreach (var item in dyn.LISTAD0)
                         {
-                            string img64 = item.Foto.ToString();
+                            string img64 = item.foto.ToString();
                             newBytes = Convert.FromBase64String(img64);
                             var stream = new MemoryStream(newBytes);
 
-                            string audio64 = item.Audio.ToString();
+                            string audio64 = item.audio.ToString();
                             byte[] decodedString = Base64.Decode(audio64, Base64Flags.Default);
 
                             listasitios.Add(new SitiosListado(
-                                            item.Id.ToString(), item.Descripcion.ToString(),
-                                            item.Latitud.ToString(), item.Longitud.ToString(),
+                                            item.id.ToString(), 
+                                            item.descripcion.ToString(),
+                                            item.latitud.ToString(), 
+                                            item.longitud.ToString(),
                                             ImageSource.FromStream(() => stream),
-                                            img64, audio64, decodedString
+                                            audio64, 
+                                            decodedString
                                             ));
                         }
                     }
                 }
+            }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine (ex.Message + "\n" + ex.StackTrace);
             }
             return listasitios;
         }

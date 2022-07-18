@@ -41,7 +41,7 @@ namespace PM2E2GRUPO4
             obtenerCoordenadas();
             descripcion.Text = "";
             UbiImagen.Source = null;
-            nombre = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), DateTime.Now.ToString("ddMMyyyymmss").Trim() + "Audio_.mp3");
+            nombre = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), DateTime.Now.ToString("ddMMyyyymmss").Trim() + "Audio_.wav");
 
         }
 
@@ -54,7 +54,7 @@ namespace PM2E2GRUPO4
                     Directory = "Pictures",
                     Name = DateTime.Now.ToString() + "_IMG.jpg",
                     SaveToAlbum = true,
-                    CompressionQuality = 50
+                    CompressionQuality = 40
                 });
 
                 if (TomarFoto != null)
@@ -204,7 +204,7 @@ namespace PM2E2GRUPO4
                 else
                 {
                     int num = Int32.Parse(valorResultante);
-                    nombre = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), DateTime.Now.ToString("ddMMyyyymmss").Trim() + "Audio_.mp3");
+                    nombre = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), DateTime.Now.ToString("ddMMyyyymmss").Trim() + "Audio_.wav");
                 }
             }
 
