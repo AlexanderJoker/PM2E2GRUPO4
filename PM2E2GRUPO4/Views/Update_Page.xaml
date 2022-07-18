@@ -4,10 +4,9 @@
              x:Class="PM2E2GRUPO4.Views.Update_Page">
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="Editar" FontSize="20" HorizontalOptions="Center"  Margin="0, 0, 0, 15" />
-            
+            <Label Text="Editar" FontSize="20" HorizontalOptions="Center"  Margin="0, 0, 0, 0" />
             <Frame CornerRadius= "40" BackgroundColor="#EBCD87" BorderColor="#54CA3F">
-                <Image x:Name="UbiImagen" HeightRequest="300"  WidthRequest="200" BackgroundColor="#FBEAC2" Aspect="AspectFit"  Margin="35,0" Source="{Binding imagen}">
+                <Image x:Name="UbiImagen" HeightRequest="200"  WidthRequest="100" BackgroundColor="#FBEAC2" Aspect="AspectFit"  Margin="35,0" Source="{Binding imagen}">
                     <Image.GestureRecognizers>
                         <TapGestureRecognizer
                             Tapped="TapGestureRecognizer_Tapped"
@@ -18,18 +17,19 @@
             <Label Text="Para editar toca el recuadro de arriba" FontSize="15" HorizontalOptions="Center"  Margin="0, 0, 0, 15" />
             <ScrollView>
                 <StackLayout>
+                    <Label Text="Latitud" HorizontalTextAlignment="Center" Margin="0,0,0,0" Padding="0,0,0,0"></Label>
                     <Entry x:Name="lat"
                    Placeholder="Latitud"
                    Text="{Binding longitud}"
                    Margin="40,10,40,10"
                    IsEnabled="False" />
-
+                    <Label Text="Logitud" HorizontalTextAlignment="Center" Margin="0,0,0,0" Padding="0,0,0,0"></Label>
                     <Entry  x:Name="longg"
                     Placeholder="Longitud"
                     Text="{Binding latitud}"
                     Margin="40,10,40,10"
                     IsEnabled="False" />
-
+                    <Label Text="Descripcion" HorizontalTextAlignment="Center" Margin="0,0,0,0" Padding="0,0,0,0"></Label>
                     <Entry x:Name="desc"
                    Placeholder="Descripcion de el Lugar"
                            TextChanged="desc_TextChanged"
@@ -45,7 +45,6 @@
 
                     <Grid ColumnDefinitions="*,*">
                         <Button x:Name="Grabar" Image="microfono" CornerRadius="10" BackgroundColor="#54CA3F" Text="Grabar" TextColor="Black" Clicked="Grabar_Clicked"/>
-
                         <Button Grid.Column="1" x:Name="btnDetener" CornerRadius="10" IsEnabled="False" BackgroundColor="#54CA3F" Image="detener" TextColor="Black"
                         Text="Detener" Clicked="btnDetener_Clicked"/>
                     </Grid>

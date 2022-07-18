@@ -100,7 +100,7 @@ namespace PM2E2GRUPO4
             }
             catch (PermissionException E03)
             {
-                await DisplayAlert("Error", "NO Se Aceptaron Permisos de Geolocalizacion ", "Ok");
+                //await DisplayAlert("Error", "NO Se Aceptaron Permisos de Geolocalizacion ", "Ok");
             }
             catch (Exception E04)
             {
@@ -226,7 +226,7 @@ namespace PM2E2GRUPO4
 
         private async void btnguardar_Clicked(object sender, EventArgs e)
         {
-            if (String.IsNullOrEmpty(descripcion.Text) || descripcion.Text.Length>100)
+            if (String.IsNullOrEmpty(descripcion.Text) || descripcion.Text.Length > 100 || lblstatus.Text == "Sin Grabar" || ImagenSave==null)
             {
                 await DisplayAlert("Alerta", "Hay Campos Vacios o descripcion muy larga", "Ok");
             }
@@ -264,6 +264,7 @@ namespace PM2E2GRUPO4
                     descripcion.Text = "";
                     ImagenSave = null;
                     //AudioSave = null;
+                    lblstatus.Text = "Sin Grabar";
                     UbiImagen.Source = null;
                     lblmin.Text = "00";
                     lblseg.Text = "00";

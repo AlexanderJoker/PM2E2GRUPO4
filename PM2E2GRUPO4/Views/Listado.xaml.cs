@@ -131,7 +131,7 @@ namespace PM2E2GRUPO4.Views
                     audio = decodedString
                 };
 
-                Update_Page up = new Update_Page();
+                Update_Page up = new Update_Page(rep.Audio, rep.Foto2);
                 up.BindingContext = sit;
                 up.Title = "ACTUALIZANDO ID: " + rep.Id;
                 await Navigation.PushAsync(up);

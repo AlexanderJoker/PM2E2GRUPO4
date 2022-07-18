@@ -25,6 +25,7 @@ namespace PM2E2GRUPO4.Views
         bool GraAudio = false;
         public String nombre;
         public bool tomefoto = false;
+        string audio, foto;
         int min, seg;
         bool Grabando;
         private readonly AudioRecorderService audioRecorderService = new AudioRecorderService()
@@ -32,9 +33,11 @@ namespace PM2E2GRUPO4.Views
             StopRecordingAfterTimeout = true,
             TotalAudioTimeout = TimeSpan.FromSeconds(180)
         };
-        public Update_Page()
+        public Update_Page(String audio,String foto)
         {
             InitializeComponent();
+            this.audio= audio;
+            this.foto= foto;
             nombre = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), DateTime.Now.ToString("ddMMyyyymmss").Trim() + "Audio_.wav");
         }
 
@@ -213,12 +216,11 @@ namespace PM2E2GRUPO4.Views
             }
             else
             {
-                if (lblstatu.Text.Contains("Grabacion Terminada") && tomefoto)//solo editar si grabo un audio y tomo foto
+                if (audio!=null && foto!=null)//solo editar si hay audio y tomo foto
                 {
-                    string pathBase64Imagen = Convert.ToBase64String(ImagenSave);
-                    string audio = nombre;
-                    byte[] fileByte = System.IO.File.ReadAllBytes(audio);
-                    string pathBase64Audio = Convert.ToBase64String(fileByte);
+                    string pathBase64Imagen = foto;
+                    //byte[] fileByte = System.IO.File.ReadAllBytes(audio);
+                    string pathBase64Audio = audio;
                     Sitios save = new Sitios
                     {
                         Id = Int32.Parse(txtid.Text),
