@@ -261,7 +261,7 @@ namespace PM2E2GRUPO4.Views
                 }
                 else
                 {
-                    await DisplayAlert("Alerta", "El audio no puede quedar vacio y la foto", "Ok");
+                    await DisplayAlert("Alerta", "El audio no puede quedar vacio y la foto si modificar", "Ok");
                 }
             }
         }
