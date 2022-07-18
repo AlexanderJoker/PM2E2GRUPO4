@@ -33,7 +33,7 @@ namespace PM2E2GRUPO4
             StopRecordingAfterTimeout = true,
             TotalAudioTimeout = TimeSpan.FromSeconds(180)
         };
-        
+
         private readonly AudioPlayer audioPlayer = new AudioPlayer();
         public MainPage()
         {
@@ -41,8 +41,10 @@ namespace PM2E2GRUPO4
             obtenerCoordenadas();
             descripcion.Text = "";
             UbiImagen.Source = null;
+            nombre = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), DateTime.Now.ToString("ddMMyyyymmss").Trim() + "Audio_.mp3");
+
         }
-        
+
         private async void foto_Clicked(object sender, EventArgs e)
         {
             try
@@ -54,7 +56,7 @@ namespace PM2E2GRUPO4
                     SaveToAlbum = true,
                     CompressionQuality = 50
                 });
-                
+
                 if (TomarFoto != null)
                 {
                     ImagenSave = null;
@@ -67,7 +69,7 @@ namespace PM2E2GRUPO4
                 }
 
                 obtenerCoordenadas();
-                
+
             }
             catch (Exception ex)
             {
@@ -79,7 +81,7 @@ namespace PM2E2GRUPO4
         public async void obtenerCoordenadas()
         {
             try
-            {   
+            {
                 var localizacion = await Geolocation.GetLocationAsync(new GeolocationRequest(GeolocationAccuracy.Best, TimeSpan.FromSeconds(10)), new CancellationTokenSource().Token);
 
                 if (localizacion != null)
@@ -111,7 +113,7 @@ namespace PM2E2GRUPO4
         {
             if (String.IsNullOrEmpty(nombre))
             {
-                 
+
             }
             else
             {
@@ -164,9 +166,9 @@ namespace PM2E2GRUPO4
         }
 
 
-        
 
-            private async void btnDetener_Clicked(object sender, EventArgs e)
+
+        private async void btnDetener_Clicked(object sender, EventArgs e)
         {
             Grabar.IsEnabled = true;
             btnDetener.IsEnabled = false;
@@ -179,9 +181,9 @@ namespace PM2E2GRUPO4
             descripcion.IsEnabled = true;
             btnguardar.IsEnabled = true;
             btnlista.IsEnabled = true;
-            
+
             await audioRecorderService.StopRecording();
-            var stream = audioRecorderService.GetAudioFileStream();            
+            var stream = audioRecorderService.GetAudioFileStream();
             bool NoExist = File.Exists(nombre);
             if (!NoExist)
             {
@@ -202,8 +204,7 @@ namespace PM2E2GRUPO4
                 else
                 {
                     int num = Int32.Parse(valorResultante);
-                    
-                    nombre = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), DateTime.Now.ToString() + " " + "Audio_.mp3");
+                    nombre = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), DateTime.Now.ToString("ddMMyyyymmss").Trim() + "Audio_.mp3");
                 }
             }
 
@@ -214,7 +215,7 @@ namespace PM2E2GRUPO4
             await DisplayAlert("AVISO", "Audio Guardado", "Aceptar");
         }
 
-      
+
 
         private async void btnlista_Clicked(object sender, EventArgs e)
         {
@@ -225,57 +226,58 @@ namespace PM2E2GRUPO4
 
         private async void btnguardar_Clicked(object sender, EventArgs e)
         {
-            
-            
-                if (String.IsNullOrEmpty(descripcion.Text))
+            if (String.IsNullOrEmpty(descripcion.Text))
+            {
+                await DisplayAlert("Alerta", "Hay Campos Vacios", "Ok");
+            }
+            else
+            {
+                string pathBase64Imagen = Convert.ToBase64String(ImagenSave);
+                string audio = nombre;
+                byte[] fileByte = System.IO.File.ReadAllBytes(audio);
+                string pathBase64Audio = Convert.ToBase64String(fileByte);
+                Sitios save = new Sitios
                 {
-                    await DisplayAlert("Alerta", "Hay Campos Vacios", "Ok");
+                    Id = 0,
+                    Descripcion = descripcion.Text,
+                    Longitud = Convert.ToDouble(longitud.Text),
+                    Latitud = Convert.ToDouble(latitud.Text),
+                    Foto = pathBase64Imagen,
+                    Audio = pathBase64Audio,
+                };
+
+                Uri RequestUri = new Uri("https://activaciones3-02.000webhostapp.com/api/setLugar.php");
+
+                var client = new HttpClient();
+                client.BaseAddress = new Uri("https://activaciones3-02.000webhostapp.com");
+                var json = JsonConvert.SerializeObject(save);
+                var contenidoJson = new StringContent(json, Encoding.UTF8, "application/json");
+                var respuestajson = await client.PostAsync("/api/setLugar.php", contenidoJson);
+                var result = await respuestajson.Content.ReadAsStringAsync();
+
+                if (respuestajson.StatusCode == HttpStatusCode.OK)
+                {
+                    JObject respuestastojson = JObject.Parse(respuestajson.Content.ReadAsStringAsync().Result);
+
+                    await DisplayAlert("success", "datos guardados correctamente", "ok");
+
+                    descripcion.Text = "";
+                    ImagenSave = null;
+                    //AudioSave = null;
+                    UbiImagen.Source = null;
+                    lblmin.Text = "00";
+                    lblseg.Text = "00";
                 }
                 else
-                {                    
-                    string pathBase64Imagen = Convert.ToBase64String(ImagenSave);   
-                    string audio = nombre;                    
-                    byte[] fileByte = System.IO.File.ReadAllBytes(audio);                    
-                    string pathBase64Audio = Convert.ToBase64String(fileByte);
-                    Sitios save = new Sitios
-                    {
-                        Id = int.Parse(""),
-                        Descripcion = descripcion.Text,
-                        Longitud = Convert.ToDouble(longitud.Text),
-                        Latitud = Convert.ToDouble(latitud.Text),
-                        Foto = pathBase64Imagen,
-                        Audio = pathBase64Audio,
-                    };
-
-                    Uri RequestUri = new Uri("https://activaciones3-02.000webhostapp.com/api/setLugar.php");
-                  
-                    var contenidoJson = new StringContent(JsonConvert.SerializeObject(save), Encoding.UTF8, "application/json");
-                    var respuestajson = await new HttpClient().PostAsync(RequestUri, contenidoJson);
-
-                    if (respuestajson.StatusCode == HttpStatusCode.OK)
-                    {                   
-                        JObject respuestastoJson = JObject.Parse(respuestajson.Content.ReadAsStringAsync().Result);
-
-                        String Mensaje = respuestastoJson["message_0x404"].ToString();
-
-                        await DisplayAlert("Success", "Datos guardados correctamente", "Ok");
-
-                        descripcion.Text = "";
-                        ImagenSave = null;
-                        AudioSave = null;
-                        UbiImagen.Source = null;
-
-                    }
-                    else
-                    {
-                        await DisplayAlert("Error", "No Hay acceso a la pagina Web", "Ok");
-                    }
-                }            
+                {
+                    await DisplayAlert("error", "no hay acceso a la pagina web", "ok");
+                }
+            }
         }
 
-    private void btnsalir_Clicked(object sender, EventArgs e)
+        private void btnsalir_Clicked(object sender, EventArgs e)
         {
-          System.Diagnostics.Process.GetCurrentProcess().Kill();
+            System.Diagnostics.Process.GetCurrentProcess().Kill();
         }
     }
 }

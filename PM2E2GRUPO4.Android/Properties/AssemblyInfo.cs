@@ -14,6 +14,7 @@ using Android.App;
 [assembly: AssemblyCopyright("Copyright ©  2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
+
 [assembly: ComVisible(false)]
 
 // Version information for an assembly consists of the following four values:
@@ -30,3 +31,4 @@ using Android.App;
 [assembly: UsesFeature("android.hardware.camera.autofocus", Required = false)]
 [assembly: UsesPermission(Android.Manifest.Permission.Internet)]
 [assembly: UsesPermission(Android.Manifest.Permission.WriteExternalStorage)]
+[assembly: Application(UsesCleartextTraffic = true)]
